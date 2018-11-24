@@ -1,0 +1,61 @@
+import {TradeService} from '../service/trade.service';
+import {Column} from 'ag-grid-community';
+import {InfiniteComponent} from '../infinite/infinite.component';
+
+export class ServerSideDataSource {
+
+  constructor(private tradeService: TradeService, private api: any, private comp: InfiniteComponent) {}
+
+  getRows(params: any) {
+    console.log(this.comp.aggColumns);
+
+    const request = params.request;
+
+    // if we are on the top level, then group keys will be [],
+    // if we are on the second level, then group keys will be like ['United States']
+    console.log(request.groupKeys);
+    const groupKeys = request.groupKeys;
+    const doingTopLevel = groupKeys.length === 0;
+    const doingSecondLevel = groupKeys.length === 1;
+
+    if (doingTopLevel) {
+      this.getTopLevelDealerList(successCallback, request, this.api);
+    } else if (doingSecondLevel) {
+      const dealer = request.groupKeys[0];
+      this.getSecondLevelDealerStatusList(successCallback, dealer, request, this.api);
+    } else {
+      const dealer = request.groupKeys[0];
+      const status = request.groupKeys[1];
+      this.getDealerAndStatus(successCallback, dealer, status, request, this.api);
+    }
+
+    function successCallback(resultForGrid, lastRow, api) {
+      params.successCallback(resultForGrid, lastRow);
+      api.autoSizeAllColumns();
+    }
+  }
+
+  getTopLevelDealerList(callback, request, api) {
+    this.tradeService.getDealers().subscribe(dealers => {
+      callback(this.getBlockFromResult(dealers, request), dealers.length, api);
+    });
+  }
+
+  getSecondLevelDealerStatusList(callback, dealer, request, api) {
+    this.tradeService.getTradesByDealer(dealer).subscribe( status => {
+      callback(this.getBlockFromResult(status, request), status.length, api);
+    });
+  }
+
+  getDealerAndStatus(callback, dealer, status, request, api) {
+    this.tradeService.getTradesByDealerAndStatus(dealer, status).subscribe( trades => {
+      callback(this.getBlockFromResult(trades, request), trades.length, api);
+    });
+  }
+
+  getBlockFromResult = function(data, request) {
+    return data.slice(request.startRow, request.endRow);
+  };
+
+}
+

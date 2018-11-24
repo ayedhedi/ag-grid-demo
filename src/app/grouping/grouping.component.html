@@ -1,0 +1,17 @@
+<ag-grid-angular
+  style="width: 1400px; height: 500px;"
+  class="ag-theme-material"
+  [rowData]="rowData"
+  [columnDefs]="columnDefs"
+  [defaultColDef]="defaultColDef"
+  [autoGroupColumnDef]="autoGroupColumnDef"
+  [enableSorting]="true"
+  [enableColResize]="true"
+  [rowModelType]="rowModelType"
+  [cacheBlockSize]="cacheBlockSize"
+  [sideBar]="sideBar"
+  [animateRows]="true"
+  [debug]="true"
+  (gridReady)="onGridReady($event)"
+>
+</ag-grid-angular>

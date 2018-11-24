@@ -1,0 +1,24 @@
+<ag-grid-angular
+  style="width: 1400px; height: 500px;"
+  class="ag-theme-material"
+  [rowData]="rowData"
+  [columnDefs]="columnDefs"
+  [defaultColDef]="defaultColDef"
+  [enableSorting]="true"
+  [enableColResize]="true"
+  [enableRangeSelection]="true"
+  [rowModelType]="rowModelType"
+  [cacheBlockSize]="cacheBlockSize"
+  [sideBar]="sideBar"
+  [animateRows]="true"
+  [rowGroupPanelShow]="rowGroupPanelShow"
+  (gridReady)="onGridReady($event)"
+>
+</ag-grid-angular>
+
+<div *ngIf="selectedTradesValue > -1">
+  <span>Selected Trades: {{selectedTrades}}</span>
+  <span>Value Sum: {{selectedTradesValue}}</span>
+  <span>Min Trade: {{selectedMinValue}}</span>
+  <span>Max Trade: {{selectedMaxValue}}</span>
+</div>
