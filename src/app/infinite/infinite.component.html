@@ -6,12 +6,15 @@
   [defaultColDef]="defaultColDef"
   [enableSorting]="true"
   [enableColResize]="true"
-  [enableRangeSelection]="true"
   [rowModelType]="rowModelType"
   [cacheBlockSize]="cacheBlockSize"
+  [rowSelection]="rowSelection"
+  [suppressRowClickSelection]="true"
+  [groupSelectsChildren]="true"
   [sideBar]="sideBar"
   [animateRows]="true"
   [rowGroupPanelShow]="rowGroupPanelShow"
+  [frameworkComponents]="frameworkComponents"
   (gridReady)="onGridReady($event)"
 >
 </ag-grid-angular>

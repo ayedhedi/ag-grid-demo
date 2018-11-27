@@ -1,9 +1,7 @@
 import {TradeService} from '../service/trade.service';
 import {Column, IServerSideDatasource, IServerSideGetRowsParams} from 'ag-grid-community';
-import {InfiniteComponent} from '../infinite/infinite.component';
+import {InfiniteComponent} from './infinite.component';
 import {Filter} from '../shared/filter';
-import {a} from '@angular/core/src/render3';
-import {AggFuncService} from 'ag-grid-enterprise';
 import {Agg} from '../shared/agg';
 
 export class ServerSideDataSource implements IServerSideDatasource {
@@ -23,11 +21,8 @@ export class ServerSideDataSource implements IServerSideDatasource {
 
   getRows(params: IServerSideGetRowsParams) {
     const aggColumns: Column[] = this.comp.aggColumns;
-    const that = this;
     const request = params.request;
     const groupKeys = request.groupKeys;
-
-    console.log(`aggColumns=${aggColumns.length}   groupKeys=${groupKeys.length}`);
 
     // apply filters
     const filters: Filter[] = [];
@@ -45,8 +40,6 @@ export class ServerSideDataSource implements IServerSideDatasource {
       // find aggregation
       this.getAggregation(aggColumns[groupKeys.length].getColId(), filters, this.tradeService, params, this.api);
     }
-
-
   }
 
   getTradesByFilters(filters, tradeService, params, api, callback) {

@@ -9,13 +9,15 @@ import { InfiniteComponent } from './infinite/infinite.component';
 
 import { AppRoutingModule } from './app-routing/app-routing.module';
 import { GroupingComponent } from './grouping/grouping.component';
+import { CustomToolPanelComponent } from './custom-details-trade-tool-panel/custom-stats-tool-panel.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     InfiniteComponent,
-    GroupingComponent
+    GroupingComponent,
+    CustomToolPanelComponent
   ],
   imports: [
     BrowserModule,
@@ -25,6 +27,9 @@ import { GroupingComponent } from './grouping/grouping.component';
   ],
   providers: [
     TradeService
+  ],
+  entryComponents: [
+    CustomToolPanelComponent
   ],
   bootstrap: [AppComponent]
 })

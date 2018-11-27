@@ -45,4 +45,8 @@ export class TradeService {
     return this.http.get<Agg[]>(url).map(data => _.values(data));
   }
 
+  getTrade(id: string) {
+    return this.http.get<Trade>(`http://localhost:8080/trade/${id}`);
+  }
+
 }

@@ -1,4 +1,5 @@
 export class Trade {
+  tradeId: number;
    accountId: string;
    accountNumber: string;
    shareClassCode: string;
