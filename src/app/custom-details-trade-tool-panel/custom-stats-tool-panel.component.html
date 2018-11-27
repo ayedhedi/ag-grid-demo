@@ -1,0 +1,16 @@
+<div style="text-align: center" *ngIf="trade">
+  <table border="0">
+    <tr>
+      <td>Id</td>
+      <td>{{trade.tradeId}}</td>
+    </tr>
+    <tr>
+      <td>Branch</td>
+      <td>{{trade.branch}}</td>
+    </tr>
+  </table>
+</div>
+
+<div>
+  <button (click)="close()">close</button>
+</div>
