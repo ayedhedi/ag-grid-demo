@@ -2,7 +2,14 @@ import { Component } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {TradeService} from '../service/trade.service';
 import {ServerSideDataSource} from './tradeserver';
-import {CellClickedEvent, Column, ColumnRowGroupChangedEvent, RangeSelectionChangedEvent, RowSelectedEvent} from 'ag-grid-community';
+import {
+  CellClickedEvent,
+  Column,
+  ColumnRowGroupChangedEvent,
+  RangeSelectionChangedEvent,
+  RowSelectedEvent,
+  SelectionChangedEvent
+} from 'ag-grid-community';
 import {CustomToolPanelComponent} from '../custom-details-trade-tool-panel/custom-stats-tool-panel.component';
 
 @Component({
@@ -83,10 +90,7 @@ export class InfiniteComponent {
 
     this.rowSelection = 'multiple';
     this.autoGroupColumnDef = {
-      width: 250 ,
-      cellRendererParams: {
-        checkbox: true
-      }
+      width: 250
     };
     this.rowModelType = 'serverSide';
     this.cacheBlockSize = 50;
@@ -126,7 +130,7 @@ export class InfiniteComponent {
     const datasource = new ServerSideDataSource(this.tradeService, this.gridColumnApi, this);
     params.api.setServerSideDatasource(datasource);
 
-    this.gridApi.addEventListener('rangeSelectionChanged', (event: RangeSelectionChangedEvent) => {
+    this.gridApi.addEventListener('selectionChanged', (event: SelectionChangedEvent) => {
       that.updateSelection(event);
     });
 
@@ -136,41 +140,22 @@ export class InfiniteComponent {
     });
 
     this.gridApi.addEventListener('cellClicked', (event: CellClickedEvent) => {
-      if (event.colDef.field === 'tradeId') {
+      if (event.data.tradeId && event.colDef.field === 'tradeId') {
         that.gridApi.openToolPanel('tradeDetails');
       }
     });
   }
 
 
-  updateSelection(event: RangeSelectionChangedEvent) {
-    if (event.started) {
-      this.selectedTrades = -1;
-      this.selectedTradesValue = -1;
-    }
-    if (event.finished && event.api.getRangeSelections()) {
-      const ranges = event.api.getRangeSelections();
-      // find unique indexes
-      const indexes = [];
-      ranges.forEach((range) => {
-        const b = range.start.rowIndex < range.end.rowIndex ? range.start.rowIndex : range.end.rowIndex;
-        const e = range.start.rowIndex > range.end.rowIndex ? range.start.rowIndex : range.end.rowIndex;
-        for (let i = b; i <= e; i++) {
-          indexes.push(i);
-        }
-      });
+  updateSelection(event: SelectionChangedEvent) {
+    const values = event.api.getSelectedNodes().map(node => {
+      return node.data.valueUsrCcy;
+    });
 
-      const values = indexes.filter((value, i, self) => {
-        return self.indexOf(value) === i;
-      }).map(i => {
-        return this.gridApi.getDisplayedRowAtIndex(i).data.valueUsrCcy;
-      });
-
-      this.selectedTrades = indexes.length;
-      this.selectedTradesValue = _.sum(values);
-      this.selectedMinValue = _.min(values);
-      this.selectedMaxValue = _.max(values);
-    }
+    this.selectedTrades = event.api.getSelectedNodes().length;
+    this.selectedTradesValue = _.sum(values);
+    this.selectedMinValue = _.min(values);
+    this.selectedMaxValue = _.max(values);
   }
 
 }
